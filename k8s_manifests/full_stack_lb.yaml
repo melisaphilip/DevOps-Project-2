@@ -1,29 +1,13 @@
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: v1
+kind: Service
 metadata:
-  name: mainlb
+  name: frontend-lb
   namespace: workshop
-  annotations:
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/target-type: ip
 spec:
-  ingressClassName: alb
-  rules:
-    - host: app.sandipdas.in
-      http:
-        paths:
-          - path: /api
-            pathType: Prefix
-            backend:
-              service:
-                name: api
-                port:
-                  number: 8080
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: frontend
-                port:
-                  number: 3000
+  type: LoadBalancer
+  selector:
+    role: frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
